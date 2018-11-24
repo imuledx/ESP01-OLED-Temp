@@ -3,15 +3,17 @@
 #include <DallasTemperature.h>
 #include <ESP8266WiFi.h>
 #include "SSD1306Wire.h"
+#include <DNSServer.h>
+#include <ESP8266WebServer.h>
+#include <WiFiManager.h>
 
-const char* ssid     = "ssid";
-const char* password = "password";
+//const char* ssid     = "ssid";
+//const char* password = "password";
 SSD1306Wire display(0x3C, 0, 2, GEOMETRY_128_32);
 
 //
 //
 // To do
-// Use wifi manager for dynamic setup
 // Include in wifimanager, options to specify POST interval, server ip, port, enable 1 or both sensors, enable or disable screen
 // Have screen cycle through temps, ip, next update interval
 
@@ -47,19 +49,24 @@ void setup(void)
   display.flipScreenVertically();
   display.setFont(ArialMT_Plain_16);
   display.clear();
-  display.drawString(0, 0, "Booting");
+  display.drawString(0, 0, "Pending Config");
   display.display();
 
-  WiFi.mode(WIFI_STA);
-  WiFi.begin(ssid, password);
-  pinMode(LED_BUILTIN, OUTPUT);
-  while (WiFi.status() != WL_CONNECTED) {
-    display.clear();
-    display.drawString(0, 0, "Connecting");
-    display.drawString(0, 16, "to WiFi...");
-    display.display();
-    delay(100);
-  }
+
+  WiFiManager wifiManager;
+  wifiManager.autoConnect("AutoConnectAP");
+
+
+  // WiFi.mode(WIFI_STA);
+  // WiFi.begin(ssid, password);
+  // pinMode(LED_BUILTIN, OUTPUT);
+  //while (WiFi.status() != WL_CONNECTED) {
+  // display.clear();
+  // display.drawString(0, 0, "Connecting");
+  // display.drawString(0, 16, "to WiFi...");
+  // display.display();
+  // delay(100);
+  //}
 
   display.clear();
   display.setFont(ArialMT_Plain_16);
